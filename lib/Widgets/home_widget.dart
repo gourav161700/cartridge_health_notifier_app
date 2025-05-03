@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:water_notifier_app/Screens/pre_filter_cartridge_details_screen.dart';
+import 'package:water_notifier_app/Screens/cartridge_details_screen.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
@@ -11,15 +11,36 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   // Cartage Options
   final List<Map<String, dynamic>> cartridgeOptions = [
-    {'name': 'Pre-filter Health', 'icon': Icons.filter_alt, 'health': 90},
-    {'name': 'Sediment Cartridge Health', 'icon': Icons.grain, 'health': 75},
     {
-      'name': 'Carbon Cartridge Health',
+      'dataName': 'prefilter',
+      'name': 'Pre-filter',
+      'icon': Icons.filter_alt,
+      'health': 90,
+    },
+    {
+      'dataName': 'sediment_filter',
+      'name': 'Sediment Cartridge',
+      'icon': Icons.grain,
+      'health': 75,
+    },
+    {
+      'dataName': 'carbon_filter',
+      'name': 'Carbon Cartridge',
       'icon': Icons.bubble_chart,
       'health': 65,
     },
-    {'name': 'RO Membrane Health', 'icon': Icons.water_damage, 'health': 80},
-    {'name': 'Alkaline Cartridge Health', 'icon': Icons.opacity, 'health': 50},
+    {
+      'dataName': 'ro_filter',
+      'name': 'RO Membrane',
+      'icon': Icons.water_damage,
+      'health': 80,
+    },
+    {
+      'dataName': 'alkaline_filter',
+      'name': 'Alkaline Cartridge',
+      'icon': Icons.opacity,
+      'health': 50,
+    },
   ];
 
   @override
@@ -196,20 +217,19 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   _navigateToCartageDetailScreen(int index) {
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return CartridgeDetailPage(
-              name: cartridgeOptions[index]['name'],
-              icon: cartridgeOptions[index]['icon'],
-              health: cartridgeOptions[index]['health'],
-            );
-          },
-        ),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return CartridgeDetailScreen(
+            dataName: cartridgeOptions[index]['dataName'],
+            name: cartridgeOptions[index]['name'],
+            icon: cartridgeOptions[index]['icon'],
+            health: cartridgeOptions[index]['health'],
+          );
+        },
+      ),
+    );
   }
 }
 
