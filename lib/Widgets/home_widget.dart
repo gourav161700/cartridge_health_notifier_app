@@ -1,0 +1,242 @@
+import 'package:flutter/material.dart';
+import 'package:water_notifier_app/Screens/pre_filter_cartridge_details_screen.dart';
+
+class HomeWidget extends StatefulWidget {
+  const HomeWidget({super.key});
+
+  @override
+  State<HomeWidget> createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
+  // Cartage Options
+  final List<Map<String, dynamic>> cartridgeOptions = [
+    {'name': 'Pre-filter Health', 'icon': Icons.filter_alt, 'health': 90},
+    {'name': 'Sediment Cartridge Health', 'icon': Icons.grain, 'health': 75},
+    {
+      'name': 'Carbon Cartridge Health',
+      'icon': Icons.bubble_chart,
+      'health': 65,
+    },
+    {'name': 'RO Membrane Health', 'icon': Icons.water_damage, 'health': 80},
+    {'name': 'Alkaline Cartridge Health', 'icon': Icons.opacity, 'health': 50},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // TDS Level Container
+        Container(
+          margin: const EdgeInsets.all(15.0),
+          height: MediaQuery.of(context).size.height / 7,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF81D4FA), Color(0xFF1565C0)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              ClipPath(
+                clipper: WaterClipper(),
+                child:
+                // Foreground wave (main blue shape)
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF4FC3F7), Color(0xFF1976D2)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    // color: Color(0xFF29B6F6),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          '87',
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'ppm',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        'TDS Value',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                          color: const Color.fromARGB(255, 59, 59, 59),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Other options
+        Expanded(
+          child: GridView.builder(
+            itemCount: 5,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.2,
+            ),
+            padding: EdgeInsets.all(16.0),
+            itemBuilder: (context, index) {
+              final item = cartridgeOptions[index];
+              return GestureDetector(
+                onTap: () {
+                  _navigateToCartageDetailScreen(index);
+                },
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            item['icon'],
+                            color: Color(0xFF8A8A8A),
+                            size: 28,
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              item['name'],
+                              style: TextStyle(
+                                color: Color(0xFF212121),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${item['health']}%',
+                            style: TextStyle(
+                              color: Color(0xFF212121),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: item['health'] / 100,
+                              backgroundColor: Color(0xFFE0E0E0),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                item['health'] > 75
+                                    ? Color(0xFF388E3C)
+                                    : item['health'] > 50
+                                    ? Color(0xFFFFB74D)
+                                    : Color(0xFFEF5350),
+                              ),
+                              minHeight: 8,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  _navigateToCartageDetailScreen(int index) {
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return CartridgeDetailPage(
+              name: cartridgeOptions[index]['name'],
+              icon: cartridgeOptions[index]['icon'],
+              health: cartridgeOptions[index]['health'],
+            );
+          },
+        ),
+      );
+    }
+  }
+}
+
+class WaterClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    double centerY = size.height / 2;
+
+    path.lineTo(0, centerY);
+    path.quadraticBezierTo(
+      size.width / 4,
+      centerY + 20,
+      size.width / 2,
+      centerY,
+    );
+    path.quadraticBezierTo(
+      3 * size.width / 4,
+      centerY - 20,
+      size.width,
+      centerY,
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
