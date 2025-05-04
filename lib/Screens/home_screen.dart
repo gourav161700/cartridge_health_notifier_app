@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:water_notifier_app/Widgets/add_filter_module.dart';
 import 'package:water_notifier_app/Widgets/home_widget.dart';
 import 'dart:math';
 
@@ -9,7 +10,8 @@ import 'package:water_notifier_app/Widgets/profile_widet.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isNewUser;
+  const HomeScreen({super.key, required this.isNewUser});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,6 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int _bottomNavigationIndexNumber = 0;
 
   final List<Widget> pages = [HomeWidget(), ProfileWidget()];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.isNewUser
+        ? WidgetsBinding.instance.addPostFrameCallback(
+          (_) => AddNewFilterPopup.showFilterDialog(context),
+        )
+        : () {};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,23 +61,38 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: ClipOval(
-              child: Container(
-                width: 40, // smaller size
-                height: 40,
-                color: const Color.fromARGB(255, 220, 219, 219),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Transform.rotate(
-                    angle: pi / 10,
-                    child: Icon(Icons.notifications_active),
+          _bottomNavigationIndexNumber == 0
+              ? Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ClipOval(
+                  child: Container(
+                    width: 40, // smaller size
+                    height: 40,
+                    color: const Color.fromARGB(255, 220, 219, 219),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Transform.rotate(
+                        angle: pi / 10,
+                        child: Icon(Icons.notifications_active),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              : Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ClipOval(
+                  child: Container(
+                    width: 40, // smaller size
+                    height: 40,
+                    color: const Color.fromARGB(255, 220, 219, 219),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.logout_rounded, size: 25.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
         ],
       ),
 

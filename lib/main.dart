@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // Custom-Screens
 import 'package:water_notifier_app/Screens/login_screen.dart';
+import 'package:water_notifier_app/Screens/register_screen.dart';
 
 // Google Fonts
 // import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
 
-      home: const LoginScreen(),
+      home: const RegisterDeviceScreen(),
     );
   }
 }
