@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:water_notifier_app/Data/data.dart';
 import 'package:water_notifier_app/Screens/cartridge_details_screen.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -122,76 +123,144 @@ class _HomeWidgetState extends State<HomeWidget> {
         ),
 
         // Other options
+        // Expanded(
+        //   child: GridView.builder(
+        //     itemCount: 5,
+        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //       crossAxisCount: 2,
+        //       crossAxisSpacing: 16,
+        //       mainAxisSpacing: 16,
+        //       childAspectRatio: 1.2,
+        //     ),
+        //     padding: EdgeInsets.all(16.0),
+        //     itemBuilder: (context, index) {
+        //       final item = cartridgeOptions[index];
+        //       return GestureDetector(
+        //         onTap: () {
+        //           _navigateToCartageDetailScreen(index);
+        //         },
+        //         child: Container(
+        //           padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
+        //           decoration: BoxDecoration(
+        //             color: Colors.white,
+        //             borderRadius: BorderRadius.circular(20),
+        //             boxShadow: [
+        //               BoxShadow(
+        //                 color: Color.fromRGBO(0, 0, 0, 0.1),
+        //                 blurRadius: 8,
+        //                 offset: Offset(0, 4),
+        //               ),
+        //             ],
+        //           ),
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //             children: [
+        //               Row(
+        //                 children: [
+        //                   Icon(
+        //                     item['icon'],
+        //                     color: Color(0xFF8A8A8A),
+        //                     size: 28,
+        //                   ),
+        //                   SizedBox(width: 10),
+        //                   Expanded(
+        //                     child: Text(
+        //                       item['name'],
+        //                       style: TextStyle(
+        //                         color: Color(0xFF212121),
+        //                         fontWeight: FontWeight.bold,
+        //                         fontSize: 14,
+        //                       ),
+        //                       maxLines: 2,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+
+        //               Column(
+        //                 crossAxisAlignment: CrossAxisAlignment.start,
+        //                 children: [
+        //                   Text(
+        //                     '${item['health']}%',
+        //                     style: TextStyle(
+        //                       color: Color(0xFF212121),
+        //                       fontWeight: FontWeight.bold,
+        //                     ),
+        //                   ),
+        //                   SizedBox(height: 4),
+        //                   ClipRRect(
+        //                     borderRadius: BorderRadius.circular(10),
+        //                     child: LinearProgressIndicator(
+        //                       value: item['health'] / 100,
+        //                       backgroundColor: Color(0xFFE0E0E0),
+        //                       valueColor: AlwaysStoppedAnimation<Color>(
+        //                         item['health'] > 75
+        //                             ? Color(0xFF388E3C)
+        //                             : item['health'] > 50
+        //                             ? Color(0xFFFFB74D)
+        //                             : Color(0xFFEF5350),
+        //                       ),
+        //                       minHeight: 8,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
         Expanded(
-          child: GridView.builder(
-            itemCount: 5,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.2,
-            ),
+          child: ListView.builder(
+            itemCount: cartridgeOptions.length,
             padding: EdgeInsets.all(16.0),
             itemBuilder: (context, index) {
               final item = cartridgeOptions[index];
+              final sensors =
+                  SensorData.cartridgeSensorDetails[item['dataName']] ?? {};
+
               return GestureDetector(
                 onTap: () {
                   _navigateToCartageDetailScreen(index);
                 },
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
+                  margin: EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        color: Color.fromRGBO(0, 0, 0, 0.05),
                         blurRadius: 8,
                         offset: Offset(0, 4),
                       ),
                     ],
                   ),
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            item['icon'],
-                            color: Color(0xFF8A8A8A),
-                            size: 28,
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
+                      Icon(item['icon'], size: 36, color: Colors.blueGrey),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               item['name'],
                               style: TextStyle(
-                                color: Color(0xFF212121),
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
                               ),
-                              maxLines: 2,
                             ),
-                          ),
-                        ],
-                      ),
-
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${item['health']}%',
-                            style: TextStyle(
-                              color: Color(0xFF212121),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: LinearProgressIndicator(
+                            SizedBox(height: 8),
+                            LinearProgressIndicator(
+                              borderRadius: BorderRadius.circular(10.0),
                               value: item['health'] / 100,
+                              minHeight: 8,
                               backgroundColor: Color(0xFFE0E0E0),
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 item['health'] > 75
@@ -200,10 +269,71 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     ? Color(0xFFFFB74D)
                                     : Color(0xFFEF5350),
                               ),
-                              minHeight: 8,
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 6),
+                            Text(
+                              'Health: ${item['health']}%',
+                              style: TextStyle(
+                                color: Color(0xFF424242),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            ...sensors.entries.map((entry) {
+                              final sensor = entry.value;
+                              final current = sensor['current_value'];
+                              final range = sensor['sensorRange'];
+                              final inRange = _checkWithinRange(range, current);
+
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.sensors,
+                                      size: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                    SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        sensor['display_name'],
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                                    Text(
+                                      '$current',
+                                      style: TextStyle(
+                                        color:
+                                            inRange ? Colors.green : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      '($range)',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    SizedBox(width: 6),
+                                    Icon(
+                                      inRange
+                                          ? Icons.check_circle_outline
+                                          : Icons.warning_amber_rounded,
+                                      size: 16,
+                                      color:
+                                          inRange ? Colors.green : Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -230,6 +360,18 @@ class _HomeWidgetState extends State<HomeWidget> {
         },
       ),
     );
+  }
+
+  bool _checkWithinRange(String range, dynamic currentValue) {
+    final parts = range.split('-');
+    if (parts.length == 2) {
+      final min = double.tryParse(parts[0].trim());
+      final max = double.tryParse(parts[1].trim());
+      if (min != null && max != null && currentValue is num) {
+        return currentValue >= min && currentValue <= max;
+      }
+    }
+    return false;
   }
 }
 

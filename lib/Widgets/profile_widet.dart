@@ -100,7 +100,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {},
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 245, 176, 72),
                   shape: RoundedRectangleBorder(

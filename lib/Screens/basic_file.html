@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Data Example</title>
+  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script> -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getDatabase, ref, set, onValue, update } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDv9kMve6s6K0tmexlguuQfMRuqK1tQW7M",               // Replace with your API Key
+      authDomain: "iot-project-afca0.firebaseapp.com",
+      databaseURL: "https://iot-project-afca0-default-rtdb.firebaseio.com",
+      projectId: "iot-project-afca0",
+      storageBucket: "iot-project-afca0.firebasestorage.app",
+      messagingSenderId: "609895221195",
+      appId: "1:609895221195:web:bbe8c0314edde3858d184e"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database(app);
+
+    // Function to save data to Firebase Realtime Database
+    function saveData(uId, preFilterData, sentimentFilterData, carbonFilterData) {
+      const userRef = database.ref('users/' + uId);
+
+      const dataToSave = {
+        pre_filter: preFilterData,
+        sendiment_filter: sentimentFilterData,
+        carbon_filter: carbonFilterData
+      };
+
+      userRef.set(dataToSave)
+        .then(() => {
+          console.log('Data saved successfully!');
+        })
+        .catch((error) => {
+          console.error('Error saving data: ', error);
+        });
+    }
+
+    // Function to read data from Firebase Realtime Database
+    function readData(uId) {
+      const userRef = database.ref('users/' + uId);
+
+      userRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          console.log('Fetched Data: ', data);
+        } else {
+          console.log('No data available for this user.');
+        }
+      });
+    }
+
+    // Function to update specific sensor data
+    function updateSensorData(uId, filterType, sensorId, timestamp, newValue) {
+      const sensorRef = database.ref(`users/${uId}/${filterType}/sensor_${sensorId}/sensor_time_values`);
+
+      // Updating the specific timestamp value
+      sensorRef.update({
+        [timestamp]: newValue
+      })
+      .then(() => {
+        console.log(`Sensor ${sensorId} data updated at ${timestamp}`);
+      })
+      .catch((error) => {
+        console.error('Error updating data: ', error);
+      });
+    }
+
+    // Example Usage
+    window.onload = () => {
+      const uId = 'unique_user_id'; // Replace with the actual user ID
+
+      // Example sensor data to save
+      const preFilterData = {
+        sensor_0: {
+          sensor_name: "Temperature Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "22.5",
+            "2025-01-20 12:10:00": "23.0"
+          }
+        },
+        sensor_1: {
+          sensor_name: "Humidity Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "60",
+            "2025-01-20 12:10:00": "62"
+          }
+        }
+      };
+
+      const sentimentFilterData = {
+        sensor_0: {
+          sensor_name: "CO2 Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.02",
+            "2025-01-20 12:10:00": "0.018"
+          }
+        },
+        sensor_1: {
+          sensor_name: "VOC Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "45",
+            "2025-01-20 12:10:00": "50"
+          }
+        }
+      };
+
+      const carbonFilterData = {
+        sensor_0: {
+          sensor_name: "Carbon Filter Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.001",
+            "2025-01-20 12:10:00": "0.002"
+          }
+        },
+        sensor_1: {
+          sensor_name: "Carbon Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.03",
+            "2025-01-20 12:10:00": "0.025"
+          }
+        }
+      };
+
+      const roFilterData = {
+        sensor_0: {
+          sensor_name: "RO Filter Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.001",
+            "2025-01-20 12:10:00": "0.002"
+          }
+        },
+        sensor_1: {
+          sensor_name: "RO Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.03",
+            "2025-01-20 12:10:00": "0.025"
+          }
+        }
+      };
+
+      const alkalineFilterData = {
+        sensor_0: {
+          sensor_name: "Alkaline Filter Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.001",
+            "2025-01-20 12:10:00": "0.002"
+          }
+        },
+        sensor_1: {
+          sensor_name: "Alkaline Sensor",
+          sensor_time_values: {
+            "2025-01-20 12:00:00": "0.03",
+            "2025-01-20 12:10:00": "0.025"
+          }
+        }
+      };
+
+      // Save data to Firebase on page load
+      saveData(uId, preFilterData, sentimentFilterData, carbonFilterData);
+
+      // Read data from Firebase when page loads
+    //   readData(uId);
+
+      // Update specific sensor data (example: update sensor_0 of pre_filter at a specific timestamp)
+    //   const updatedSensorData = "23.5"; // New reading
+    //   const timestamp = "2025-01-20 12:10:00"; // Timestamp to update
+    //   updateSensorData(uId, 'pre_filter', 0, timestamp, updatedSensorData);
+    };
+  </script>
+</head>
+<body>
+  <h1>Firebase Realtime Database Example</h1>
+  <p>Check the browser console for the results of the operations.</p>
+</body>
+</html>
